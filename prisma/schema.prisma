@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  DELIVERY_PERSON
+}
+
+model User {
+  id String @id @default(uuid())
+  name String
+  cpf String @unique
+  email String @unique
+  password String
+  role UserRole @default(DELIVERY_PERSON)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  orders Order[]
+
+  @@map("users")  
+}
+
+model Recipient {
+  id String @id @default(uuid())
+  name String
+  street String
+  neighborhood String
+  city String
+  state String
+  cep String
+  orders Order[]
+
+  @@map("recipients")
+
+}
+
+enum OrderStatus {
+  CREATED 
+  PENDING
+  PICKED_UP
+  DELIVERED
+  RETURNED
+}
+
+model Order {
+  id String @id @default(uuid())
+  deliveryPersonId String? @map("delivery_person_id")
+  recipientId String @map("recipient_id")
+  status OrderStatus @default(CREATED)
+  deliveryLatitude Decimal @map("delivery_latitude")
+  deliveryLongitude Decimal @map("delivery_longitude")
+  pickupDate DateTime? @map("pickup_date")
+  deliveryDate DateTime? @map("delivery_date")
+  returnedDate DateTime? @map("returned_date")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  deliveryPerson User? @relation( fields: [deliveryPersonId], references: [id])
+  recipient Recipient @relation( fields: [recipientId], references: [id])
+  deliveryPhoto FileAttachment?
+
+  @@index([deliveryPersonId])
+  @@index([recipientId])
+  @@map("orders")
+
+}
+
+model FileAttachment {
+  id String @id @default(uuid())
+  orderId String @unique @map("order_id")
+  title String
+  url String
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("file_attachments")
+}
