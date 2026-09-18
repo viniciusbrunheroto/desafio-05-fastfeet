@@ -51,6 +51,8 @@ import { FetchNearbyOrdersUseCase } from '#src/domain/transportation/application
 import { StorageModule } from '../storage/storage.module.js'
 import { MarkOrderAsDeliveredController } from './controllers/mark-order-as-delivered.controller.js'
 import { MarkOrderAsDeliveredUseCase } from '#src/domain/transportation/application/use-cases/mark-order-as-delivered.js'
+import { UploadAttachmentController } from './controllers/upload-attachment.controller.js'
+import { UploadAndCreateDeliveryPhotoUseCase } from '#src/domain/transportation/application/use-cases/upload-and-create-delivery-photo.js'
 
 
 @Module({
@@ -80,6 +82,7 @@ import { MarkOrderAsDeliveredUseCase } from '#src/domain/transportation/applicat
     PickUpOrderController,
     MarkOrderAsReturnedController,
     MarkOrderAsDeliveredController,
+    UploadAttachmentController,
   ],
   providers: [
     RegisterUserUseCase,
@@ -106,6 +109,7 @@ import { MarkOrderAsDeliveredUseCase } from '#src/domain/transportation/applicat
     PickUpOrderUseCase,
     MarkOrderAsReturnedUseCase,
     MarkOrderAsDeliveredUseCase,
+    UploadAndCreateDeliveryPhotoUseCase,
   ]
 })
 

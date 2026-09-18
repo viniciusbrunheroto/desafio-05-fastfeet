@@ -4,6 +4,7 @@ import { Order as PrismaOrder, Prisma } from '#src/generated/prisma/client.js'
 import { Injectable } from '@nestjs/common'
 import { PrismaOrdersMapper } from '../mappers/prisma-orders-mapper.js'
 import { PrismaService } from '../prisma.service.js'
+import { DomainEvents } from '#src/core/events/domain-events.js'
 
 @Injectable()
 export class PrismaOrdersRepository implements OrdersRepository {
@@ -128,6 +129,9 @@ export class PrismaOrdersRepository implements OrdersRepository {
       },
       data,
     })
+
+    DomainEvents.dispatchEventsForAggregate(newOrder.id)
+    
   }
 
   async delete(orderToBeDeleted: Order) {

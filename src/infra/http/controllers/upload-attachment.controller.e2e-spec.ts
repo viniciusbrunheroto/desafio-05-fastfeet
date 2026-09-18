@@ -34,12 +34,12 @@ describe('Upload attachment (E2E)', () => {
     await app.init()
   })
 
-  test('[POST] /attachments', async () => {
+  test('[POST] /attachments/orders/:orderId', async () => {
     const user = await userFactory.makePrismaUser({
       role: UserRole.DELIVERY_PERSON
     })
 
-    const accessToken = jwt.sign({ sub: user.id.toString() })
+    const accessToken = jwt.sign({ sub: user.id.toString(), role: user.role })
 
     const recipient = await recipientFactory.makePrismaRecipient()
     
@@ -54,8 +54,7 @@ describe('Upload attachment (E2E)', () => {
     const response = await request(app.getHttpServer())
       .post(`/attachments/orders/${orderId}`)
       .set('Authorization', `Bearer ${accessToken}`)
-      .attach('file', './test/e2e/sample-upload.png')
-
+      .attach('file', './test/e2e/example.jpg')
 
     expect(response.statusCode).toBe(201)
     expect(response.body).toEqual({

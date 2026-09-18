@@ -29,8 +29,6 @@ export class UploadAttachmentController {
       })
     ) file: Express.Multer.File){
 
-    console.log(file)
-
     const {sub: userId} = user
 
     const result = await this.uploadAndCreateAttachment.execute({

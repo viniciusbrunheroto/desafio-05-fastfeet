@@ -1,6 +1,7 @@
-import { Entity } from '#src/core/entities/entity.js'
+import { AggregateRoot } from '#src/core/entities/aggregate-root.js'
 import { UniqueEntityID } from '#src/core/entities/unique-entity-id.js'
 import { Optional } from '#src/core/types/optional.js'
+import { OrderStatusChangedEvent } from '../events/order-status-changed-event.js'
 import { Attachment } from './attachment.js'
 
 export enum OrderStatus {
@@ -25,7 +26,7 @@ export interface OrderProps {
     updatedAt?: Date | null,
 }
 
-export class Order extends Entity<OrderProps> {
+export class Order extends AggregateRoot<OrderProps> {
   
   get deliveryPersonId() {
     return this.props.deliveryPersonId
@@ -106,6 +107,9 @@ export class Order extends Entity<OrderProps> {
     }
     
     this.props.status = OrderStatus.PENDING
+    
+    this.addDomainEvent(new OrderStatusChangedEvent(this, 'CREATED', 'PENDING'))
+
     this.touch()
   }
 
@@ -117,6 +121,9 @@ export class Order extends Entity<OrderProps> {
     this.props.status = OrderStatus.PICKED_UP
     this.props.pickupDate = new Date()
     this.props.deliveryPersonId = deliveryPersonId
+
+    this.addDomainEvent(new OrderStatusChangedEvent(this, 'PENDING', 'PICKED_UP'))
+
     this.touch()
   }
 
@@ -128,6 +135,8 @@ export class Order extends Entity<OrderProps> {
     this.props.status = OrderStatus.DELIVERED
     this.props.deliveryDate = new Date()
     this.props.photoDelivered = photo
+
+    this.addDomainEvent(new OrderStatusChangedEvent(this, 'PICKED_UP', 'DELIVERED'))
     this.touch()
   }
 
@@ -138,6 +147,8 @@ export class Order extends Entity<OrderProps> {
 
     this.props.status = OrderStatus.RETURNED
     this.props.returnedDate = new Date()
+
+    this.addDomainEvent(new OrderStatusChangedEvent(this, 'PICKED_UP', 'RETURNED'))
     this.touch()
   }
 

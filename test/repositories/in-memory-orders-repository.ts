@@ -1,3 +1,4 @@
+import { DomainEvents } from '#src/core/events/domain-events.js'
 import { FindManyNearbyParams, FindManyOrdersParams, OrdersRepository } from '#src/domain/transportation/application/repositories/orders-repository.js'
 import { Order, OrderStatus } from '#src/domain/transportation/enterprise/entities/order.js'
 import { getDistanceBetweenCoordinates } from '../utils/get-distance-between-coordinates.js'
@@ -109,6 +110,8 @@ export class InMemoryOrdersRepository implements OrdersRepository {
     const orderIndex = this.orders.findIndex(order => order.id === newOrder.id )
   
     this.orders[orderIndex] = newOrder
+
+    DomainEvents.dispatchEventsForAggregate(newOrder.id)
   }
 
   async delete(orderToBeDeleted: Order) {
