@@ -8,6 +8,8 @@ import { OrdersRepository } from '#src/domain/transportation/application/reposit
 import { PrismaOrdersRepository } from './prisma/repositories/prisma-orders-repository.js'
 import { AttachmentsRepository } from '#src/domain/transportation/application/repositories/attachments-repository.js'
 import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attachments-repository.js'
+import { NotificationsRepository } from '#src/domain/notification/application/repositories/notifications-repository.js'
+import { PrismaNotificationsRepository } from './prisma/repositories/prisma-notifications-repository.js'
 
 
 @Module({
@@ -28,6 +30,10 @@ import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attach
     {
       provide: AttachmentsRepository,
       useClass: PrismaAttachmentsRepository,
+    },
+    {
+      provide: NotificationsRepository,
+      useClass: PrismaNotificationsRepository,
     }
   ],
   exports: [
@@ -36,6 +42,7 @@ import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attach
     RecipientsRepository,
     OrdersRepository,
     AttachmentsRepository,
+    NotificationsRepository,
   ]
 })
 

@@ -1,8 +1,9 @@
 import { Either, right } from '#src/core/either.js'
 import { Injectable } from '@nestjs/common'
-import { NotificationsRepository } from '../repositories/notifications-repository.js'
+
 import { Notification } from '../../enterprise/entities/notification.js'
 import { UniqueEntityID } from '#src/core/entities/unique-entity-id.js'
+import { NotificationsRepository } from '../repositories/notifications-repository.js'
 
 export interface SendNotificationUseCaseRequest {
     recipientId: string
